@@ -75,7 +75,7 @@ export default function AssignmentsPage() {
         backHref="/assignments"
       />
 
-      <div className="flex-1 p-4 lg:p-6">
+      <div className="flex-1 p-4 lg:p-6 lg:pb-24">
         {/* Page title — desktop */}
         <div className="mb-5 hidden lg:block">
           <div className="flex items-center gap-2">
