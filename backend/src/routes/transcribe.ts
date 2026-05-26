@@ -20,12 +20,11 @@ router.post('/', upload.single('audio'), async (req: Request, res: Response) => 
   }
 
   try {
-    // Node 18+ has File / Blob globally
-    const audioFile = new File(
-      [req.file.buffer],
-      'recording.webm',
-      { type: req.file.mimetype || 'audio/webm' }
-    );
+    // Convert Buffer to Uint8Array so File accepts a BlobPart in TS.
+    const audioBytes = new Uint8Array(req.file.buffer);
+    const audioFile = new File([audioBytes], 'recording.webm', {
+      type: req.file.mimetype || 'audio/webm',
+    });
 
     const result = await groq.audio.transcriptions.create({
       file: audioFile,

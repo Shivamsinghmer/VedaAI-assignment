@@ -1,53 +1,133 @@
 'use client';
 
+import type { LucideIcon } from 'lucide-react';
 import { Sparkles, Mic, FileText, BrainCircuit, ClipboardList, Lightbulb } from 'lucide-react';
 import { motion } from 'motion/react';
 import Link from 'next/link';
 import Header from '@/components/layout/Header';
 import { useUIStore } from '@/store/uiStore';
 
-const TOOLS = [
+type ToolStatus = 'Active' | 'Coming Soon';
+
+type ToolItem = {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+  status: ToolStatus;
+  statusClass: string;
+  href?: string | null;
+};
+
+// Single source of truth for toolkit cards.
+const TOOL_ITEMS: ToolItem[] = [
   {
     icon: FileText,
     title: 'Question Paper Generator',
-    desc: 'AI-powered question paper creation with custom difficulty, marks, and sections.',
-    badge: 'Active',
-    badgeColor: 'bg-green-100 text-green-700',
+    description: 'AI-powered question paper creation with custom difficulty, marks, and sections.',
+    status: 'Active',
+    statusClass: 'bg-green-100 text-green-700',
     href: '/assignments/create',
   },
   {
     icon: BrainCircuit,
     title: 'Auto Grader',
-    desc: 'Upload answer sheets and let AI grade and provide feedback instantly.',
-    badge: 'Coming Soon',
-    badgeColor: 'bg-[#f0f0f0] text-[#a9a9a9]',
+    description: 'Upload answer sheets and let AI grade and provide feedback instantly.',
+    status: 'Coming Soon',
+    statusClass: 'bg-[#f0f0f0] text-[#a9a9a9]',
     href: null,
   },
   {
     icon: ClipboardList,
     title: 'Rubric Builder',
-    desc: 'Generate detailed marking rubrics for any assignment type in seconds.',
-    badge: 'Coming Soon',
-    badgeColor: 'bg-[#f0f0f0] text-[#a9a9a9]',
+    description: 'Generate detailed marking rubrics for any assignment type in seconds.',
+    status: 'Coming Soon',
+    statusClass: 'bg-[#f0f0f0] text-[#a9a9a9]',
     href: null,
   },
   {
     icon: Mic,
     title: 'Voice to Text',
-    desc: 'Dictate instructions or feedback — transcribed instantly with Whisper AI.',
-    badge: 'Active',
-    badgeColor: 'bg-green-100 text-green-700',
+    description: 'Dictate instructions or feedback — transcribed instantly with Whisper AI.',
+    status: 'Active',
+    statusClass: 'bg-green-100 text-green-700',
     href: '/assignments/create',
   },
   {
     icon: Lightbulb,
     title: 'Lesson Planner',
-    desc: 'Generate structured lesson plans aligned to your curriculum and learning goals.',
-    badge: 'Coming Soon',
-    badgeColor: 'bg-[#f0f0f0] text-[#a9a9a9]',
+    description: 'Generate structured lesson plans aligned to your curriculum and learning goals.',
+    status: 'Coming Soon',
+    statusClass: 'bg-[#f0f0f0] text-[#a9a9a9]',
     href: null,
   },
 ];
+
+const CARD_BASE_CLASS =
+  'bg-white rounded-2xl border border-[#efefef] p-5 flex flex-col transition-shadow w-full h-full';
+const CARD_HEADER_CLASS = 'flex items-start justify-between gap-2 mb-3';
+const CARD_ICON_WRAPPER_CLASS = 'w-10 h-10 rounded-xl bg-[#f6f6f6] flex items-center justify-center shrink-0';
+const CARD_TITLE_CLASS = 'font-bold text-sm text-[#2f2f2f]';
+const CARD_DESC_CLASS = 'text-xs text-[#5d5d5d] mt-1 leading-relaxed font-inter';
+const CARD_CTA_CLASS = 'text-xs font-semibold transition-colors';
+const CARD_FOOTER_CLASS = 'mt-4 pt-3 border-t border-[#f6f6f6]';
+
+type ToolCardProps = {
+  tool: ToolItem;
+  index: number;
+  onNotify: (toolTitle: string) => void;
+};
+
+function ToolCard({ tool, index, onNotify }: ToolCardProps) {
+  const Icon = tool.icon;
+  const isActive = tool.status === 'Active';
+  const isClickable = isActive && Boolean(tool.href);
+
+  const cardContent = (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, delay: index * 0.07 }}
+      className={`${CARD_BASE_CLASS} ${isActive ? 'hover:shadow-md cursor-pointer' : 'cursor-default'}`}
+    >
+      <div className={CARD_HEADER_CLASS}>
+        <div className={CARD_ICON_WRAPPER_CLASS}>
+          <Icon className="w-5 h-5 text-[#2f2f2f]" />
+        </div>
+        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 ${tool.statusClass}`}>
+          {tool.status}
+        </span>
+      </div>
+
+      <div className="flex-1">
+        <p className={CARD_TITLE_CLASS}>{tool.title}</p>
+        <p className={CARD_DESC_CLASS}>{tool.description}</p>
+      </div>
+
+      <div className={CARD_FOOTER_CLASS}>
+        {isActive ? (
+          <span className={`${CARD_CTA_CLASS} text-[#4bc16c]`}>Open tool →</span>
+        ) : (
+          <button
+            onClick={() => onNotify(tool.title)}
+            className={`${CARD_CTA_CLASS} text-[#a9a9a9] hover:text-[#2f2f2f]`}
+          >
+            Notify me →
+          </button>
+        )}
+      </div>
+    </motion.div>
+  );
+
+  if (isClickable && tool.href) {
+    return (
+      <Link href={tool.href} className="flex h-full">
+        {cardContent}
+      </Link>
+    );
+  }
+
+  return <div className="flex h-full">{cardContent}</div>;
+}
 
 export default function ToolkitPage() {
   const { toast } = useUIStore();
@@ -86,59 +166,16 @@ export default function ToolkitPage() {
 
         {/* Tools grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 auto-rows-fr">
-          {TOOLS.map((tool, i) => {
-            const Icon = tool.icon;
-            const isActive = tool.badge === 'Active';
-
-            const cardContent = (
-              <motion.div
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, delay: i * 0.07 }}
-                className={`bg-white rounded-2xl border border-[#efefef] p-5 flex flex-col transition-shadow w-full h-full ${
-                  isActive ? 'hover:shadow-md cursor-pointer' : 'cursor-default'
-                }`}
-              >
-                <div className="flex items-start justify-between gap-2 mb-3">
-                  <div className="w-10 h-10 rounded-xl bg-[#f6f6f6] flex items-center justify-center shrink-0">
-                    <Icon className="w-5 h-5 text-[#2f2f2f]" />
-                  </div>
-                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 ${tool.badgeColor}`}>
-                    {tool.badge}
-                  </span>
-                </div>
-
-                <div className="flex-1">
-                  <p className="font-bold text-sm text-[#2f2f2f]">{tool.title}</p>
-                  <p className="text-xs text-[#5d5d5d] mt-1 leading-relaxed font-inter">{tool.desc}</p>
-                </div>
-
-                {/* Bottom CTA — always present so all cards are equal height */}
-                <div className="mt-4 pt-3 border-t border-[#f6f6f6]">
-                  {isActive ? (
-                    <span className="text-xs font-semibold text-[#4bc16c]">Open tool →</span>
-                  ) : (
-                    <button
-                      onClick={() => toast(`${tool.title} is coming soon! We'll notify you when it's ready.`, 'info')}
-                      className="text-xs font-semibold text-[#a9a9a9] hover:text-[#2f2f2f] transition-colors"
-                    >
-                      Notify me →
-                    </button>
-                  )}
-                </div>
-              </motion.div>
-            );
-
-            return isActive && tool.href ? (
-              <Link key={tool.title} href={tool.href} className="flex">
-                {cardContent}
-              </Link>
-            ) : (
-              <div key={tool.title} className="flex">
-                {cardContent}
-              </div>
-            );
-          })}
+          {TOOL_ITEMS.map((tool, index) => (
+            <ToolCard
+              key={tool.title}
+              tool={tool}
+              index={index}
+              onNotify={(toolTitle) =>
+                toast(`${toolTitle} is coming soon! We'll notify you when it's ready.`, 'info')
+              }
+            />
+          ))}
         </div>
       </div>
     </div>

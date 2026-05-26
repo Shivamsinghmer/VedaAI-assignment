@@ -10,13 +10,22 @@ import mongoose from 'mongoose';
 import { initWebSocket } from './services/websocket';
 import assignmentRoutes from './routes/assignments';
 import transcribeRoutes from './routes/transcribe';
+import { startWorker } from './workers/generationWorker';
 
 const app = express();
 const server = http.createServer(app);
 
 // Middleware
+const ALLOWED_ORIGINS = (process.env.FRONTEND_URL || 'http://localhost:3000')
+  .split(',')
+  .map((o) => o.trim());
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: (origin, cb) => {
+    // Allow requests with no origin (mobile apps, curl, etc.)
+    if (!origin || ALLOWED_ORIGINS.includes(origin)) return cb(null, true);
+    cb(new Error(`CORS: ${origin} not allowed`));
+  },
   credentials: true,
 }));
 app.use(express.json({ limit: '10mb' }));
@@ -34,11 +43,14 @@ app.get('/api/health', (_req, res) => {
 // WebSocket
 initWebSocket(server);
 
-// MongoDB
+// MongoDB + Worker (worker starts after DB is ready)
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/vedaai';
 mongoose
   .connect(MONGODB_URI)
-  .then(() => console.log('[DB] MongoDB connected'))
+  .then(async () => {
+    console.log('[DB] MongoDB connected');
+    await startWorker();
+  })
   .catch((err) => console.error('[DB] MongoDB connection error:', err));
 
 // Uploads directory

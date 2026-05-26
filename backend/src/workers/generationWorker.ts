@@ -86,9 +86,8 @@ async function processJob(job: Job<GenerationJobData>) {
   return generatedPaper;
 }
 
-async function main() {
-  await connectDB();
-
+/** Start the BullMQ worker. Call this after the DB is already connected. */
+export async function startWorker() {
   const worker = new Worker<GenerationJobData>('assignment-generation', processJob, {
     connection: redis,
     concurrency: 3,
@@ -123,6 +122,11 @@ async function main() {
     await worker.close();
     process.exit(0);
   });
+
+  return worker;
 }
 
-main().catch(console.error);
+// Allow running as a standalone process: `npm run worker`
+if (require.main === module) {
+  connectDB().then(() => startWorker()).catch(console.error);
+}

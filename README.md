@@ -14,6 +14,7 @@ An AI-powered assessment creation tool for teachers. Built with Next.js, Express
 │  /assignments          → Dashboard (empty/filled state) │
 │  /assignments/create   → Multi-step creation form       │
 │  /assignments/[id]     → Live progress + paper output   │
+│  /toolkit              → AI Teacher's Toolkit hub       │
 └────────────────────┬─────────────────┬──────────────────┘
                      │ REST API         │ WebSocket
                      │                 │ (real-time updates)
@@ -144,3 +145,4 @@ Then open [http://localhost:3000](http://localhost:3000)
 - **Redis caching** — assignments list and paper results cached for fast retrieval
 - **PDF export** — browser print dialog with print-optimized CSS
 - **Responsive** — desktop sidebar + mobile bottom tab bar
+- **AI Toolkit hub** — unified entry point for active tools and upcoming features
