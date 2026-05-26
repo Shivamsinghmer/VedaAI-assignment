@@ -1,0 +1,15 @@
+node_modules
+.env
+dist
+logs
+coverage
+*.log
+.DS_Store
+.vscode
+.idea
+*.env
+*.env.local
+*.env.development
+
+# Ignore build artifacts
+build
