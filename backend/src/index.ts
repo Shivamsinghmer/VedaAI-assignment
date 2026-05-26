@@ -22,8 +22,14 @@ const ALLOWED_ORIGINS = (process.env.FRONTEND_URL || 'http://localhost:3000')
 
 app.use(cors({
   origin: (origin, cb) => {
-    // Allow requests with no origin (mobile apps, curl, etc.)
-    if (!origin || ALLOWED_ORIGINS.includes(origin)) return cb(null, true);
+    // Allow requests with no origin (curl, mobile apps, etc.)
+    if (!origin) return cb(null, true);
+    // Allow exact matches from FRONTEND_URL
+    if (ALLOWED_ORIGINS.includes(origin)) return cb(null, true);
+    // Allow all Vercel preview deployments (*.vercel.app)
+    if (origin.endsWith('.vercel.app')) return cb(null, true);
+    // Allow localhost in development
+    if (origin.startsWith('http://localhost')) return cb(null, true);
     cb(new Error(`CORS: ${origin} not allowed`));
   },
   credentials: true,
