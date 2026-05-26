@@ -103,7 +103,7 @@ export default function QuestionPaper({ paper, assignment }: Props) {
           <p className="mt-2 text-xs text-[#a9a9a9] italic">All questions are compulsory unless stated otherwise.</p>
 
           {/* Student fields */}
-          <div className="mt-5 pt-5 border-t border-dashed border-[#e8e8e8] space-y-2 text-left w-full max-w-xs">
+          <div className="mt-5 pt-5 border-t border-dashed border-[#e8e8e8] space-y-2 text-left w-full max-w-xs mx-auto">
             {['Name', 'Roll Number', 'Section'].map((f) => (
               <div key={f} className="flex items-center gap-2 text-sm text-[#5d5d5d]">
                 <span className="w-28 shrink-0">{f}:</span>

@@ -56,6 +56,16 @@ export default function AssignmentsPage() {
     try { await deleteAssignment(id); } finally { setDeletingId(null); }
   }
 
+  function getPageNumbers(current: number, total: number): (number | '…')[] {
+    if (total <= 5) return Array.from({ length: total }, (_, i) => i + 1);
+    const pages: (number | '…')[] = [1];
+    if (current > 3) pages.push('…');
+    for (let p = Math.max(2, current - 1); p <= Math.min(total - 1, current + 1); p++) pages.push(p);
+    if (current < total - 2) pages.push('…');
+    pages.push(total);
+    return pages;
+  }
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header
@@ -261,17 +271,28 @@ export default function AssignmentsPage() {
                 </button>
 
                 <div className="flex items-center gap-1">
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                    <button
-                      key={p}
-                      onClick={() => setPage(p)}
-                      className={`w-9 h-9 rounded-xl text-sm font-semibold transition-colors ${
-                        p === page ? 'bg-[#171717] text-white' : 'bg-white border border-[#e8e8e8] text-[#5d5d5d] hover:bg-[#f6f6f6]'
-                      }`}
-                    >
-                      {p}
-                    </button>
-                  ))}
+                  {getPageNumbers(page, totalPages).map((p, idx) =>
+                    p === '…' ? (
+                      <span
+                        key={`ellipsis-${idx}`}
+                        className="w-9 h-9 flex items-center justify-center text-sm text-[#a9a9a9]"
+                      >
+                        …
+                      </span>
+                    ) : (
+                      <button
+                        key={p}
+                        onClick={() => setPage(p as number)}
+                        className={`w-9 h-9 rounded-xl text-sm font-semibold transition-colors ${
+                          p === page
+                            ? 'bg-[#171717] text-white'
+                            : 'bg-white border border-[#e8e8e8] text-[#5d5d5d] hover:bg-[#f6f6f6]'
+                        }`}
+                      >
+                        {p}
+                      </button>
+                    )
+                  )}
                 </div>
 
                 <button
@@ -303,7 +324,7 @@ export default function AssignmentsPage() {
           </Link>
           <Link
             href="/assignments/create"
-            className="hidden lg:flex fixed bottom-6 left-1/2 -translate-x-1/2 items-center gap-2 bg-[#171717] text-white px-6 py-3 rounded-full text-sm font-semibold shadow-lg hover:bg-[#2f2f2f] transition-colors z-30 whitespace-nowrap"
+            className="hidden lg:flex fixed bottom-6 left-[calc(50%+110px)] -translate-x-1/2 items-center gap-2 bg-[#171717] text-white px-6 py-3 rounded-full text-sm font-semibold shadow-lg hover:bg-[#2f2f2f] transition-colors z-30 whitespace-nowrap"
           >
             <Plus className="w-4 h-4" />
             Create Assignment

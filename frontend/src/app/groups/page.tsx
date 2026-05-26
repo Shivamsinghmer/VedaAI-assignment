@@ -89,7 +89,7 @@ export default function GroupsPage() {
         {/* Desktop CTA */}
         <button
           onClick={() => toast("Groups feature is coming soon! We'll notify you.", 'info')}
-          className="hidden lg:flex fixed bottom-6 left-1/2 -translate-x-1/2 items-center gap-2 bg-[#171717] text-white px-6 py-3 rounded-full text-sm font-semibold shadow-lg hover:bg-[#2f2f2f] transition-colors z-30 whitespace-nowrap"
+          className="hidden lg:flex fixed bottom-6 left-[calc(50%+110px)] -translate-x-1/2 items-center gap-2 bg-[#171717] text-white px-6 py-3 rounded-full text-sm font-semibold shadow-lg hover:bg-[#2f2f2f] transition-colors z-30 whitespace-nowrap"
         >
           <Plus className="w-4 h-4" />
           Create Group

@@ -143,7 +143,7 @@ export default function Header({
 
       {/* ── Mobile pill header ─────────────────────────────────── */}
       <header className="lg:hidden flex items-center justify-between px-4 py-3 bg-white rounded-2xl mx-3 mt-3 shadow-sm sticky top-3 z-30">
-        <Link href="/assignments">
+        <Link href="/">
           <Image src="/logo.png" alt="VedaAI" width={90} height={26} priority />
         </Link>
         <div className="flex items-center gap-2">
@@ -213,7 +213,7 @@ export default function Header({
               <ArrowLeft className="w-5 h-5 text-[#2f2f2f]" />
             </button>
           )}
-          <span className={`flex-1 text-sm font-bold text-[#2f2f2f] ${showBack ? 'text-center -ml-7' : ''}`}>
+          <span className={`flex-1 text-sm font-bold text-[#2f2f2f] truncate ${showBack ? 'text-center -ml-7' : ''}`}>
             {mobileTitle}
           </span>
         </motion.div>

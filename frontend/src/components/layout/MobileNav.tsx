@@ -7,7 +7,7 @@ import { motion } from 'motion/react';
 import { cn } from '@/lib/utils';
 
 const tabs = [
-  { label: 'Home', href: '/assignments', icon: '/icons/home.png', matchExact: true },
+  { label: 'Home', href: '/', icon: '/icons/home.png', matchExact: true },
   { label: 'Create', href: '/assignments/create', icon: '/icons/assignment.png', matchExact: false },
   { label: 'Library', href: '/library', icon: '/icons/llbrary.png', matchExact: false },
   { label: 'AI Toolkit', href: '/toolkit', icon: '/icons/ai-teacher-toolkit.png', matchExact: false },
@@ -21,7 +21,7 @@ export default function MobileNav() {
       <div className="bg-[#1a1a1a] rounded-2xl shadow-lg flex justify-around px-2 py-2.5">
         {tabs.map(({ label, href, icon, matchExact }) => {
           const active = matchExact
-            ? pathname === href || pathname === '/'
+            ? pathname === href
             : pathname.startsWith(href);
           return (
             <Link

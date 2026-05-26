@@ -79,13 +79,13 @@ export default function ToolkitPage() {
             <Sparkles className="w-5 h-5 text-white" />
           </div>
           <div>
-            <p className="font-bold text-sm">Powered by Groq + Llama 3.3</p>
+            <p className="font-bold text-sm">Powered by Llama 3.3</p>
             <p className="text-xs text-white/60 mt-0.5">Ultra-fast AI inference for real-time education tools.</p>
           </div>
         </motion.div>
 
         {/* Tools grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 auto-rows-fr">
           {TOOLS.map((tool, i) => {
             const Icon = tool.icon;
             const isActive = tool.badge === 'Active';
@@ -95,11 +95,11 @@ export default function ToolkitPage() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.35, delay: i * 0.07 }}
-                className={`bg-white rounded-2xl border border-[#efefef] p-5 flex flex-col gap-3 transition-shadow h-full ${
+                className={`bg-white rounded-2xl border border-[#efefef] p-5 flex flex-col transition-shadow w-full h-full ${
                   isActive ? 'hover:shadow-md cursor-pointer' : 'cursor-default'
                 }`}
               >
-                <div className="flex items-start justify-between gap-2">
+                <div className="flex items-start justify-between gap-2 mb-3">
                   <div className="w-10 h-10 rounded-xl bg-[#f6f6f6] flex items-center justify-center shrink-0">
                     <Icon className="w-5 h-5 text-[#2f2f2f]" />
                   </div>
@@ -107,18 +107,25 @@ export default function ToolkitPage() {
                     {tool.badge}
                   </span>
                 </div>
-                <div>
+
+                <div className="flex-1">
                   <p className="font-bold text-sm text-[#2f2f2f]">{tool.title}</p>
                   <p className="text-xs text-[#5d5d5d] mt-1 leading-relaxed font-inter">{tool.desc}</p>
                 </div>
-                {!isActive && (
-                  <button
-                    onClick={() => toast(`${tool.title} is coming soon! We'll notify you when it's ready.`, 'info')}
-                    className="mt-auto text-xs font-semibold text-[#a9a9a9] hover:text-[#2f2f2f] transition-colors text-left"
-                  >
-                    Notify me →
-                  </button>
-                )}
+
+                {/* Bottom CTA — always present so all cards are equal height */}
+                <div className="mt-4 pt-3 border-t border-[#f6f6f6]">
+                  {isActive ? (
+                    <span className="text-xs font-semibold text-[#4bc16c]">Open tool →</span>
+                  ) : (
+                    <button
+                      onClick={() => toast(`${tool.title} is coming soon! We'll notify you when it's ready.`, 'info')}
+                      className="text-xs font-semibold text-[#a9a9a9] hover:text-[#2f2f2f] transition-colors"
+                    >
+                      Notify me →
+                    </button>
+                  )}
+                </div>
               </motion.div>
             );
 

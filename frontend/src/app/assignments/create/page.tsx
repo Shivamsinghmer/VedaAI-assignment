@@ -293,9 +293,9 @@ export default function CreateAssignmentPage() {
               </motion.button>
 
               {/* Totals */}
-              <div className="mt-4 flex justify-end gap-6 text-sm text-[#5d5d5d]">
-                <span>Total Questions : <span className="font-bold text-[#2f2f2f]">{totalQuestions}</span></span>
-                <span>Total Marks : <span className="font-bold text-[#2f2f2f]">{totalMarks}</span></span>
+              <div className="mt-4 flex flex-wrap justify-end gap-x-6 gap-y-1 text-sm text-[#5d5d5d]">
+                <span>Total Questions: <span className="font-bold text-[#2f2f2f]">{totalQuestions}</span></span>
+                <span>Total Marks: <span className="font-bold text-[#2f2f2f]">{totalMarks}</span></span>
               </div>
             </div>
 

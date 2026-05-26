@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 import { useUIStore } from '@/store/uiStore';
 
 const NAV = [
-  { label: 'Home', href: '/assignments', icon: '/icons/home.png' },
+  { label: 'Home', href: '/', icon: '/icons/home.png' },
   { label: 'My Groups', href: '/groups', icon: '/icons/my-group.png' },
   { label: 'Assignments', href: '/assignments', icon: '/icons/assignment.png' },
   { label: "AI Teacher's Toolkit", href: '/toolkit', icon: '/icons/ai-teacher-toolkit.png' },
@@ -69,8 +69,8 @@ export default function MobileDrawer() {
             <nav className="flex flex-col gap-0.5 flex-1 overflow-y-auto">
               {NAV.map(({ label, href, icon }) => {
                 const active =
-                  href === '/assignments'
-                    ? pathname === '/assignments'
+                  href === '/'
+                    ? pathname === '/'
                     : pathname.startsWith(href);
                 return (
                   <Link
